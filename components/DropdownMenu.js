@@ -1,11 +1,17 @@
-import React from 'react'
+import React from 'react';
 
-const DropdownMenu = () => {
+const DropdownMenu = ({data}) => {
   return (
-    <div>
-        this is DropdownMenu
-    </div>
-  )
-}
+    <>
+      <select className='w-full outline-none p-2 border border-green-600 rounded'>
+        {data.map((item) => (
+          <option key={item.value} value={item.value}>
+            {item.name}
+          </option>
+        ))}
+      </select>
+    </>
+  );
+};
 
-export default DropdownMenu
+export default DropdownMenu;

@@ -1,7 +1,23 @@
 import Head from 'next/head';
 import DropdownMenu from '../components/DropdownMenu';
+import InputNumber from '../components/InputNumber';
 
 export default function Home() {
+  const currencyList = [
+    {
+      name: 'JPY',
+      value: 'JPY',
+    },
+    {
+      name: 'SGD',
+      value: 'SGD',
+    },
+    {
+      name: 'USD',
+      value: 'USD',
+    },
+  ];
+
   return (
     <div className='w-screen min-h-screen bg-gray-200 flex items-center'>
       <Head>
@@ -11,8 +27,29 @@ export default function Home() {
       </Head>
 
       <div className='w-1/2 mx-auto p-4 border-2 border-green-600 rounded-lg bg-white grid place-items-center'>
+        {/* Form Title */}
         <h2 className='text-lg font-bold'>Kalkulator Bea Cukai</h2>
-        <DropdownMenu />
+
+        {/* Form Fields */}
+        <div className='w-full grid grid-col-12 font-semibold gap-2'>
+          <p className='col-span-12'>Harga Barang (Cost)</p>
+          <div className='col-span-3'>
+            <DropdownMenu data={currencyList} />
+          </div>
+          <div className='col-span-9'>
+            <InputNumber placeholder='Nominal harga sesuai mata uang negara asal barang' />
+          </div>
+
+          <p className='col-span-12'>Biaya Asuransi (Insurance)</p>
+          <div className='col-span-12'>
+            <InputNumber placeholder='Biaya asuransi sesuai mata uang negara asal barang' />
+          </div>
+
+          <p className='col-span-12'>Ongkos Kirim (Freight)</p>
+          <div className='col-span-12'>
+            <InputNumber placeholder='Biaya pengiriman sesuai mata uang negara asal barang' />
+          </div>
+        </div>
       </div>
     </div>
   );
