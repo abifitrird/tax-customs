@@ -1,9 +1,25 @@
 import Head from 'next/head';
+import {useState} from 'react';
 import DropdownMenu from '../components/DropdownMenu';
 import InputNumber from '../components/InputNumber';
+import SubmitButton from '../components/SubmitButton';
 
 export default function Home() {
+  const [currency, setCurrency] = useState('');
+  const [cost, setCost] = useState(0);
+  const [insurance, setInsurance] = useState(0);
+  const [freight, setFreight] = useState(0);
+  const [formValues, setFormValues] = useState({
+    cost,
+    insurance,
+    freight,
+  });
+
   const currencyList = [
+    {
+      name: 'Pilih mata uang',
+      value: '',
+    },
     {
       name: 'JPY',
       value: 'JPY',
@@ -31,23 +47,40 @@ export default function Home() {
         <h2 className='text-lg font-bold'>Kalkulator Bea Cukai</h2>
 
         {/* Form Fields */}
-        <div className='w-full grid grid-col-12 font-semibold gap-2'>
+        <div className='w-full grid grid-col-12 font-semibold gap-3'>
           <p className='col-span-12'>Harga Barang (Cost)</p>
           <div className='col-span-3'>
-            <DropdownMenu data={currencyList} />
+            <DropdownMenu
+              data={currencyList}
+              currentValue={currency}
+              setValue={setCurrency}
+            />
           </div>
           <div className='col-span-9'>
-            <InputNumber placeholder='Nominal harga sesuai mata uang negara asal barang' />
+            <InputNumber
+              placeholder='Nominal harga sesuai mata uang negara asal barang'
+              setValue={setCost}
+            />
           </div>
 
           <p className='col-span-12'>Biaya Asuransi (Insurance)</p>
           <div className='col-span-12'>
-            <InputNumber placeholder='Biaya asuransi sesuai mata uang negara asal barang' />
+            <InputNumber
+              placeholder='Biaya asuransi sesuai mata uang negara asal barang'
+              setValue={setInsurance}
+            />
           </div>
 
           <p className='col-span-12'>Ongkos Kirim (Freight)</p>
           <div className='col-span-12'>
-            <InputNumber placeholder='Biaya pengiriman sesuai mata uang negara asal barang' />
+            <InputNumber
+              placeholder='Biaya pengiriman sesuai mata uang negara asal barang'
+              setValue={setFreight}
+            />
+          </div>
+
+          <div className='col-span-12'>
+            <SubmitButton />
           </div>
         </div>
       </div>

@@ -1,11 +1,18 @@
 import React from 'react';
 
-const DropdownMenu = ({data}) => {
+const DropdownMenu = ({data, currentValue, setValue}) => {
   return (
     <>
-      <select className='w-full outline-none p-2 border border-green-600 rounded'>
+      <select
+        className='w-full outline-none p-2 border border-green-600 rounded'
+        onChange={(e) => setValue(e.target.value)}
+      >
         {data.map((item) => (
-          <option key={item.value} value={item.value}>
+          <option
+            selected={item.value == currentValue}
+            key={item.value}
+            value={item.value}
+          >
             {item.name}
           </option>
         ))}
