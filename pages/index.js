@@ -4,6 +4,7 @@ import DropdownMenu from '../components/DropdownMenu';
 import InputNumber from '../components/InputNumber';
 import ResultCard from '../components/ResultCard';
 import SubmitButton from '../components/SubmitButton';
+import { countExcises, countImportDuty, countTotalBuy } from '../utils/common';
 
 export default function Home() {
   const [currency, setCurrency] = useState('');
@@ -11,11 +12,9 @@ export default function Home() {
   const [insurance, setInsurance] = useState(0);
   const [freight, setFreight] = useState(0);
   const [showResult, setShowResult] = useState(false);
-  // const [formValues, setFormValues] = useState({
-  //   cost,
-  //   insurance,
-  //   freight,
-  // });
+  const [totalBuy, setTotalBuy] = useState(0);
+  const [importDuty, setImportDuty] = useState(0);
+  const [excises, setExcises] = useState(0);
 
   const currencyList = [
     {
@@ -36,24 +35,25 @@ export default function Home() {
     {
       name: 'USD',
       value: 'USD',
-      rate: 14344.75,
+      rate: 14500,
     },
   ];
 
   const countTax = () => {
-    const exchangeRate = currencyList.find(
-      (item) => item.value == currency
-    ).rate;
-
-    const convertedCost = cost * exchangeRate;
-    const convertedInsurance = insurance * exchangeRate;
-    const convertedFreight = freight * exchangeRate;
-
-    const totalBuy = (
-      convertedCost +
-      convertedInsurance +
-      convertedFreight
-    ).toFixed(2);
+    const total = countTotalBuy(
+      currencyList,
+      currency,
+      parseFloat(cost),
+      parseFloat(insurance),
+      parseFloat(freight)
+    );
+    const totalImportDuty = countImportDuty(total);
+    const totalExcises = countExcises(
+      parseFloat(total) + parseFloat(totalImportDuty)
+    );
+    setTotalBuy(total);
+    setImportDuty(totalImportDuty);
+    setExcises(totalExcises);
     setShowResult(true);
   };
 
@@ -65,54 +65,61 @@ export default function Home() {
         <link rel='icon' href='/favicon.ico' />
       </Head>
 
-      {!showResult ? (
-        <div className='w-3/4 min-h-screen mx-auto p-4'>
-          {/* Form Title */}
+      <div className='w-2/3 min-h-screen mx-auto'>
+        {/* Form Title */}
+        <div className='p-4 grid place-items-center bg-purple-500 text-white'>
           <h2 className='text-lg text-center font-bold'>
             Kalkulator Bea Cukai
           </h2>
-
-          {/* Form Fields */}
-          <div className='w-full grid grid-col-12 font-semibold gap-3'>
-            <p className='col-span-12'>Harga Barang (Cost)</p>
-            <div className='col-span-3'>
-              <DropdownMenu
-                data={currencyList}
-                currentValue={currency}
-                setValue={setCurrency}
-              />
-            </div>
-            <div className='col-span-9'>
-              <InputNumber
-                placeholder='Nominal harga sesuai mata uang negara asal barang'
-                setValue={setCost}
-              />
-            </div>
-
-            <p className='col-span-12'>Biaya Asuransi (Insurance)</p>
-            <div className='col-span-12'>
-              <InputNumber
-                placeholder='Biaya asuransi sesuai mata uang negara asal barang'
-                setValue={setInsurance}
-              />
-            </div>
-
-            <p className='col-span-12'>Ongkos Kirim (Freight)</p>
-            <div className='col-span-12'>
-              <InputNumber
-                placeholder='Biaya pengiriman sesuai mata uang negara asal barang'
-                setValue={setFreight}
-              />
-            </div>
-
-            <div className='col-span-12'>
-              <SubmitButton setValue={countTax} />
-            </div>
-          </div>
         </div>
-      ) : (
-        <ResultCard />
-      )}
+
+        {/* Form Fields */}
+        <div className='w-full grid grid-col-12 font-semibold gap-3'>
+          <p className='col-span-12'>Harga Barang (Cost)</p>
+          <div className='col-span-3'>
+            <DropdownMenu
+              data={currencyList}
+              currentValue={currency}
+              setValue={setCurrency}
+            />
+          </div>
+          <div className='col-span-9'>
+            <InputNumber
+              placeholder='Nominal harga sesuai mata uang negara asal barang'
+              setValue={setCost}
+            />
+          </div>
+
+          <p className='col-span-12'>Biaya Asuransi (Insurance)</p>
+          <div className='col-span-12'>
+            <InputNumber
+              placeholder='Biaya asuransi sesuai mata uang negara asal barang'
+              setValue={setInsurance}
+            />
+          </div>
+
+          <p className='col-span-12'>Ongkos Kirim (Freight)</p>
+          <div className='col-span-12'>
+            <InputNumber
+              placeholder='Biaya pengiriman sesuai mata uang negara asal barang'
+              setValue={setFreight}
+            />
+          </div>
+
+          <div className='col-span-12'>
+            <SubmitButton setValue={countTax} />
+          </div>
+          {showResult && (
+            <div className='col-span-12'>
+              <ResultCard
+                totalBuy={totalBuy}
+                importDuty={importDuty}
+                excises={excises}
+              />
+            </div>
+          )}
+        </div>
+      </div>
     </div>
   );
 }
